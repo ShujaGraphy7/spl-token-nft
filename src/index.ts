@@ -40,7 +40,7 @@ async function uploadToPinata(filePath: string): Promise<string> {
   data.append("file", stream);  // Use the stream as the file content
 
   const response = await axios.post(url, data, {
-    maxContentLength: "Infinity",
+    maxContentLength: Infinity,
     headers: {
       ...data.getHeaders(),  // Pass the headers required for form-data
       pinata_api_key: PINATA_API_KEY,
