@@ -36,13 +36,13 @@ async function uploadToPinata(filePath: string): Promise<string> {
   const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
   const data = new FormData();
-  const stream = fs.createReadStream(filePath);  // Create a readable stream
-  data.append("file", stream);  // Use the stream as the file content
+  const stream = fs.createReadStream(filePath); // Create a readable stream
+  data.append("file", stream); // Use the stream as the file content
 
   const response = await axios.post(url, data, {
     maxContentLength: Infinity,
     headers: {
-      ...data.getHeaders(),  // Pass the headers required for form-data
+      ...data.getHeaders(), // Pass the headers required for form-data
       pinata_api_key: PINATA_API_KEY,
       pinata_secret_api_key: PINATA_SECRET_API_KEY,
     },
@@ -51,9 +51,13 @@ async function uploadToPinata(filePath: string): Promise<string> {
   return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
 }
 
-
 // Function to upload JSON metadata to Pinata
-async function uploadJsonToPinata(jsonData: { name: string; symbol: string; description: string; image: string; }) {
+async function uploadJsonToPinata(jsonData: {
+  name: string;
+  symbol: string;
+  description: string;
+  image: string;
+}) {
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
 
   const response = await axios.post(url, jsonData, {
