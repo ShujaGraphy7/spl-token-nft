@@ -31,6 +31,7 @@ const UpdateKYCForm = () => {
   // Effect to fetch KYC data when wallet address changes
   useEffect(() => {
     fetchKycData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   // Function to update KYC data

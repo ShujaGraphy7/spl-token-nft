@@ -1,5 +1,6 @@
 const KYCModel = require("../models/KYCModel");
 const multer = require("multer");
+const mintNFT = require("../utils/mintNFT");
 
 // Set up Multer for image uploads
 const storage = multer.memoryStorage(); // Store the image in memory
@@ -31,11 +32,10 @@ exports.createKYC = async (req, res) => {
       },
     });
 
-    await newKycEntry.save();
-
     // Generate the URLs for image and metadata
-    const imageUrl = `${process.env.BASE_URL || "http://localhost:4000"}/api/tokens/image/${newKycEntry._id}`;
-    const metadataUrl = `${process.env.BASE_URL || "http://localhost:4000"}/api/tokens/metadata/${newKycEntry._id}`;
+    const baseUrl = process.env.BASE_URL || "http://localhost:4000";
+    const imageUrl = `${baseUrl}/api/tokens/image/${newKycEntry._id}`;
+    const metadataUrl = `${baseUrl}/api/tokens/metadata/${newKycEntry._id}`;
 
     // Create the metadata object
     const metadata = {
@@ -46,7 +46,7 @@ exports.createKYC = async (req, res) => {
       symbol,
       description,
       image: imageUrl, 
-      ...customMetadata, 
+      ...customMetadata, // Merge any additional metadata
     };
 
     // Update the KYC entry with the metadata
@@ -54,11 +54,16 @@ exports.createKYC = async (req, res) => {
 
     await newKycEntry.save();
 
+    // Ensure mintNFT function returns a proper object, not a stringified JSON
+    const nftdata = await mintNFT(walletAddress, metadata);
+    console.log(nftdata);
+
     return res.status(201).json({
       message: "KYC entry created successfully",
       walletAddress,
-      metadataUrl, // Return the metadata URL
-      imageUrl,    // Return the image URL
+      nftdata,       // Ensure this is a proper object
+      metadataUrl,   // Return the metadata URL
+      imageUrl,      // Return the image URL
     });
   } catch (error) {
     console.error("Error creating KYC data:", error);

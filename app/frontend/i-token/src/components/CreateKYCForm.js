@@ -31,7 +31,7 @@ const CreateKYCForm = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          timeout: 10000, // Optional: To avoid connection issues
+          // timeout: 10000, // Optional: To avoid connection issues
         }
       );
   
@@ -91,6 +91,7 @@ const CreateKYCForm = () => {
       {imageLink && (
         <div className="mb-2">
           <p>Image preview:</p>
+          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
           <img src={imageLink} alt="Image preview" className="w-full h-auto mb-2" />
         </div>
       )}
