@@ -19,7 +19,7 @@ const generateMetadataFile = async (metadata, walletAddress) => {
   
       // Return the URL to the generated metadata file
       return `${
-        process.env.BASE_URL || "https://spl-token-nft.vercel.app/"
+        process.env.BASE_URL || "https://spl-token-nft-chi7.vercel.app/"
       }/metadata/${filename}`;
     } catch (error) {
       console.error("Error generating metadata file:", error);

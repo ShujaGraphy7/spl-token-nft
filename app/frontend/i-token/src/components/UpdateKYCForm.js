@@ -16,7 +16,7 @@ const UpdateKYCForm = () => {
 
     try {
       const response = await axios.get(
-        `https://spl-token-nft.vercel.app/api/tokens/display?walletAddress=${walletAddress}`
+        `https://spl-token-nft-chi7.vercel.app/api/tokens/display?walletAddress=${walletAddress}`
       );
       const kycData = response.data;
 
@@ -45,7 +45,7 @@ const UpdateKYCForm = () => {
       setError("");
 
       const response = await axios.put(
-        "https://spl-token-nft.vercel.app/api/tokens/update",
+        "https://spl-token-nft-chi7.vercel.app/api/tokens/update",
         {
           walletAddress,
           metadata: {

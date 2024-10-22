@@ -10,7 +10,7 @@ const port = process.env.PORT || 4000;
 
 // CORS configuration
 app.use(cors({ 
-  origin: 'https://spl-token-nft.vercel.app/', 
+  origin: 'https://spl-token-nft-chi7.vercel.app/', 
   credentials: true 
 }));
 

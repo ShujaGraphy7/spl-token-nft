@@ -1,6 +1,6 @@
-const KYCModel = require("../models/KYCModel");
+const KYCModel = require("../../models/KYCModel");
 const multer = require("multer");
-const mintNFT = require("../utils/mintNFT");
+const mintNFT = require("../../utils/mintNFT");
 
 // Set up Multer for image uploads
 const storage = multer.memoryStorage(); // Store the image in memory
@@ -34,7 +34,7 @@ exports.createKYC = async (req, res) => {
     });
 
     // Generate the URLs for image and metadata
-    const baseUrl = process.env.BASE_URL || "https://spl-token-nft.vercel.app/";
+    const baseUrl = process.env.BASE_URL || "https://spl-token-nft-chi7.vercel.app/";
     const imageUrl = `${baseUrl}/api/tokens/image/${newKycEntry._id}`;
     const metadataUrl = `${baseUrl}/api/tokens/metadata/${newKycEntry._id}`;
 

@@ -26,7 +26,7 @@ const CreateKYCForm = () => {
       formData.append("image", image);
   
       const response = await axios.post(
-        "https://spl-token-nft.vercel.app/api/tokens/create",
+        "https://spl-token-nft-chi7.vercel.app/api/tokens/create",
         formData,
         {
           headers: {
