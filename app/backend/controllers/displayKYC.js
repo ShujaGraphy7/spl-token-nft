@@ -1,4 +1,4 @@
-const KYCModel = require("../../models/KYCModel");
+const KYCModel = require("../models/KYCModel");
 
 exports.displayKYC = async (req, res) => {
   const { walletAddress } = req.query;
@@ -8,20 +8,19 @@ exports.displayKYC = async (req, res) => {
   }
 
   try {
-    // Find the KYC data based on the wallet address
     const kycData = await KYCModel.findOne({ walletAddress });
 
     if (!kycData) {
       return res.status(404).json({ message: "KYC data not found" });
     }
 
-    const { metadata, walletAddress: addr } = kycData;
-    const kycStatus = metadata.get('kycStatus');  // Access kycStatus from metadata
+    // Extract metadata from the KYC entry
+    const { kycStatus, metadata, walletAddress: addr } = kycData;
 
     return res.json({
       walletAddress: addr,
-      kycStatus,   // Return kycStatus from metadata
-      metadata,    // Return metadata directly (including explorerLink if present)
+      kycStatus,
+      metadata,  // Return metadata directly
     });
   } catch (error) {
     console.error("Error fetching KYC data:", error);

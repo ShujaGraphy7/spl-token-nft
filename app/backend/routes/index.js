@@ -3,9 +3,9 @@ const router = express.Router();
 const multer = require("multer");
 
 // Import controllers
-const { createKYC } = require("../api/token/createKYC");
-const { updateKYC } = require("../api/token/updateKYC");
-const { displayKYC } = require("../api/token/displayKYC");
+const { createKYC } = require("../controllers/createKYC");
+const { updateKYC } = require("../controllers/updateKYC");
+const { displayKYC } = require("../controllers/displayKYC");
 const KYCModel = require("../models/KYCModel");
 
 // Set up Multer for image uploads

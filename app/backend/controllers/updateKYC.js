@@ -1,4 +1,4 @@
-const KYCModel = require("../../models/KYCModel");
+const KYCModel = require("../models/KYCModel");
 
 exports.updateKYC = async (req, res) => {
   const { walletAddress, metadata } = req.body;
