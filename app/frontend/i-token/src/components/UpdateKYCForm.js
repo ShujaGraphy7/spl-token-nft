@@ -16,7 +16,7 @@ const UpdateKYCForm = () => {
 
     try {
       const response = await axios.get(
-        `https://spl-token-nft.vercel.app/api/tokens/display?walletAddress=${walletAddress}`
+        `http://localhost:4000/api/tokens/display?walletAddress=${walletAddress}`
       );
       const kycData = response.data;
 
@@ -43,7 +43,7 @@ const UpdateKYCForm = () => {
       setError('');
 
       const response = await axios.put(
-        "https://spl-token-nft.vercel.app/api/tokens/update",
+        "http://localhost:4000/api/tokens/update",
         {
           walletAddress,
           metadata: {
@@ -56,7 +56,7 @@ const UpdateKYCForm = () => {
           },
         }
       );
-      console.log("KYC Data updated:", response.data);
+      console.log('KYC Data updated:', response.data);
       // Optionally, you could display a success message or clear the form
       alert('KYC entry updated successfully!');
     } catch (error) {
