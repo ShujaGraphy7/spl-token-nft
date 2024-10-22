@@ -21,9 +21,11 @@ const {
   createTransferInstruction,
 } = require("@solana/spl-token");
 
+const KYCModel = require('../models/KYCModel'); // Import the KYC model
+
 require("dotenv").config();
 
-const mintNFT = async (recieverAddress, metadata) => {
+const mintNFT = async (kycId, recieverAddress, metadata) => {
   try {
     // Initialize Solana connection
     const SOLANA_CONNECTION = new Connection(clusterApiUrl("devnet"), "finalized");
@@ -44,7 +46,7 @@ const mintNFT = async (recieverAddress, metadata) => {
     // Create the NFT
     await createNft(umi, {
       mint: collectionMint,
-      name: metadata.name,
+      name: metadata.name,   // Ensure metadata.name is valid
       symbol: metadata.symbol,
       uri: metadata.metadataUrl,
       updateAuthority: umi.identity.publicKey,
@@ -80,7 +82,7 @@ const mintNFT = async (recieverAddress, metadata) => {
 
     const TRANSFER_AMOUNT = 1;
 
-    // Get or create associated token accounts
+    // Get or create associated token accounts for the sender
     let sourceAccount = await getOrCreateAssociatedTokenAccount(
       SOLANA_CONNECTION,
       FROM_KEYPAIR,
@@ -89,6 +91,7 @@ const mintNFT = async (recieverAddress, metadata) => {
     );
     console.log(`    Source Account: ${sourceAccount.address.toString()}`);
 
+    // Get or create associated token accounts for the receiver
     let destinationAccount = await getOrCreateAssociatedTokenAccount(
       SOLANA_CONNECTION,
       FROM_KEYPAIR,
@@ -97,7 +100,7 @@ const mintNFT = async (recieverAddress, metadata) => {
     );
     console.log(`    Destination Account: ${destinationAccount.address.toString()}`);
 
-    // Create and send transfer transaction
+    // Create and send transfer transaction to transfer the NFT ownership
     const tx = new Transaction().add(
       createTransferInstruction(
         sourceAccount.address,
@@ -114,6 +117,8 @@ const mintNFT = async (recieverAddress, metadata) => {
       FROM_KEYPAIR,
     ]);
 
+    console.log(`Transfer Signature: ${signature}`);
+
     // Get and display the NFT Explorer link
     const explorerLink = getExplorerLink(
       "address",
@@ -122,6 +127,16 @@ const mintNFT = async (recieverAddress, metadata) => {
     );
 
     console.log(`NFT Explorer Link: ${explorerLink}`);
+
+    // Update the KYC record with the explorer link in metadata
+    await KYCModel.findByIdAndUpdate(kycId, {
+      $set: {
+        'metadata.explorerLink': explorerLink
+      }
+    });
+
+    console.log(`KYC metadata updated with explorerLink: ${explorerLink}`);
+
     return { success: true, explorerLink };
   } catch (error) {
     console.error("Error minting NFT:", error);

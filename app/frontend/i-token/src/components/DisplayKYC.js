@@ -70,14 +70,7 @@ const DisplayKYC = () => {
           <p className="mb-1">
             <strong>Wallet Address:</strong> {kycData.walletAddress}
           </p>
-          <p className="mb-1">
-            <strong>KYC Status:</strong>{' '}
-            {kycData.kycStatus ? (
-              <span className="text-green-600">Verified</span>
-            ) : (
-              <span className="text-red-600">Not Verified</span>
-            )}
-          </p>
+          
           <h4 className="font-semibold mt-2">Metadata:</h4>
           <pre className="bg-white p-2 rounded text-left overflow-auto">
             {JSON.stringify(kycData.metadata, null, 2)}

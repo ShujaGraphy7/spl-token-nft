@@ -64,7 +64,7 @@ const Navbar = () => {
           }`}
           onClick={() => setActiveSection('settings')}
         >
-          Dsplay KYC
+          Display KYC
         </button>
       </div>
 

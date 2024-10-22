@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const tokenRoutes = require("./routes/index.js");
 const connectDB = require("./connectDB"); // Import the connection function
+const authenticateJWT = require('./utils/authMiddleware'); // JWT middleware
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -14,6 +15,9 @@ app.use(cors({
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Apply JWT middleware globally (except /display route)
+app.use(authenticateJWT); 
 
 // Define API routes
 app.use("/api/tokens", tokenRoutes);

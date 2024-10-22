@@ -6,7 +6,7 @@ const UpdateKYCForm = () => {
   const [metadata, setMetadata] = useState({});
   const [newKey, setNewKey] = useState('');  // To store the key
   const [newValue, setNewValue] = useState('');  // To store the value
-  const [kycStatus, setKycStatus] = useState(false); // KYC Status field
+  const [status, setStatus] = useState('pending'); // Status field (pending, accepted, rejected)
   const [error, setError] = useState(''); // Error message state
   const [isKycVerified, setIsKycVerified] = useState(false); // State to check if KYC is verified
 
@@ -21,9 +21,9 @@ const UpdateKYCForm = () => {
       const kycData = response.data;
 
       // Set the fetched KYC status and metadata
-      setKycStatus(kycData.kycStatus);
+      setStatus(kycData.status);
       setMetadata(kycData.metadata);
-      setIsKycVerified(kycData.kycStatus); // Check if KYC is verified
+      setIsKycVerified(kycData.status === 'accepted'); // Check if KYC is verified (accepted)
     } catch (error) {
       console.error('Error fetching KYC data:', error);
       setError(error.response?.data?.message || 'An unexpected error occurred.');
@@ -49,15 +49,16 @@ const UpdateKYCForm = () => {
           metadata: {
             ...metadata,
             walletAddress, // Ensure walletAddress is included
-            kycStatus, // Include KYC status in the metadata
           },
-          Headers: {
+          status, // Include the KYC status field (pending, accepted, or rejected)
+        },
+        {
+          headers: {
             Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`, // Send the token in the Authorization header
           },
         }
       );
       console.log('KYC Data updated:', response.data);
-      // Optionally, you could display a success message or clear the form
       alert('KYC entry updated successfully!');
     } catch (error) {
       console.error('Error updating KYC data:', error);
@@ -95,21 +96,26 @@ const UpdateKYCForm = () => {
         required
       />
 
-      {/* KYC Status Checkbox */}
+      {/* KYC Status Dropdown */}
       <div className="mb-4">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={kycStatus}
-            onChange={(e) => setKycStatus(e.target.checked)}
-            className="mr-2"
-            disabled={isKycVerified} // Disable checkbox if KYC is verified
-          />
-          Mark KYC as Verified
-        </label>
+        <label className="block font-semibold mb-2">KYC Status</label>
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          disabled={isKycVerified} // Disable if KYC is verified
+          className="border p-2 w-full"
+        >
+          <option value="pending">Pending</option>
+          <option value="accepted">Accepted</option>
+          <option value="rejected">Rejected</option>
+        </select>
       </div>
 
+
+
       <div className="mb-4">
+      <label className="block font-semibold mb-2">Add new Metadata Field</label>
+
         <input
           type="text"
           value={newKey}

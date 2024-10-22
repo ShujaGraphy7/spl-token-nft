@@ -10,8 +10,9 @@ exports.createKYC = async (req, res) => {
   const { walletAddress, name, symbol, description, customMetadata } = req.body;
   const image = req.file; // Get the uploaded image
 
-  if (!walletAddress) {
-    return res.status(400).json({ message: "Wallet address is required" });
+  // Validate the required fields
+  if (!walletAddress || !name || !symbol || !description || !image) {
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
   try {
@@ -21,10 +22,10 @@ exports.createKYC = async (req, res) => {
       return res.status(400).json({ message: "KYC entry already exists for this wallet address" });
     }
 
-    // Create a new KYC entry with image data and placeholders for metadata
+    // Create a new KYC entry with image data and placeholders for metadata and status
     const newKycEntry = new KYCModel({
       walletAddress,
-      kycStatus: false,
+      status: 'pending', // Set initial status as pending
       metadata: {}, // Placeholder for metadata
       img: {
         data: image.buffer, // Store image binary data
@@ -33,35 +34,36 @@ exports.createKYC = async (req, res) => {
     });
 
     // Generate the URLs for image and metadata
-    const baseUrl = process.env.BASE_URL || "http://localhost:4000";
+    const baseUrl = process.env.BASE_URL || "https://spl-token-nft.vercel.app/";
     const imageUrl = `${baseUrl}/api/tokens/image/${newKycEntry._id}`;
     const metadataUrl = `${baseUrl}/api/tokens/metadata/${newKycEntry._id}`;
 
     // Create the metadata object
     const metadata = {
-      kycStatus: newKycEntry.kycStatus,
+      status: newKycEntry.status, // Include status in metadata
       metadataUrl,
       walletAddress,
       name,
       symbol,
       description,
       image: imageUrl, 
-      ...customMetadata, // Merge any additional metadata
+      ...JSON.parse(customMetadata || '{}'), // Merge any additional metadata
     };
 
     // Update the KYC entry with the metadata
     newKycEntry.metadata = metadata;
 
+    // Save the KYC entry to the database
     await newKycEntry.save();
 
-    // Ensure mintNFT function returns a proper object, not a stringified JSON
-    const nftdata = await mintNFT(walletAddress, metadata);
-    console.log(nftdata);
+    // Call mintNFT to mint the NFT and pass the metadata
+    console.log("Minting NFT with metadata:", metadata); // Log metadata for debugging
+    const nftdata = await mintNFT(newKycEntry._id, walletAddress, metadata); // Pass kycId to mintNFT
 
     return res.status(201).json({
       message: "KYC entry created successfully",
       walletAddress,
-      nftdata,       // Ensure this is a proper object
+      nftdata,       // NFT data from minting
       metadataUrl,   // Return the metadata URL
       imageUrl,      // Return the image URL
     });

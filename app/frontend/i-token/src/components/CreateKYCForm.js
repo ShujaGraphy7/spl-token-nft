@@ -30,6 +30,7 @@ const CreateKYCForm = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`,
           },
           // timeout: 10000, // Optional: To avoid connection issues
         }
@@ -62,7 +63,7 @@ const CreateKYCForm = () => {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Create KYC Data</h2>
+      <h2 className="text-2xl font-bold mb-4">Create NFT</h2>
 
       <input
         type="text"
@@ -103,7 +104,7 @@ const CreateKYCForm = () => {
           isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
         }`}
       >
-        {isSubmitting ? "Submitting..." : "Create KYC Data"}
+        {isSubmitting ? "Submitting..." : "Create NFT"}
       </button>
     </div>
   );
