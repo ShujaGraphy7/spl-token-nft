@@ -18,11 +18,10 @@ const CreateKYCForm = () => {
       setIsSubmitting(true);
       const formData = new FormData();
       formData.append("walletAddress", walletAddress);
-      formData.append("name", "Identity Token"); // NFT name
-      formData.append("symbol", "IDT"); // NFT symbol
+      formData.append("name", "Identity Token");
+      formData.append("symbol", "IT");
       formData.append("description", description);
-      formData.append("metadataUrl", "https://my-nft-metadata-url.com"); // Example metadata URL
-      formData.append("customMetadata", JSON.stringify({})); // Stringify metadata as empty JSON object for now
+      formData.append("customMetadata", '{}'); // Stringify as an empty JSON object
       formData.append("image", image);
   
       const response = await axios.post(
@@ -31,8 +30,8 @@ const CreateKYCForm = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`,
           },
+          // timeout: 10000, // Optional: To avoid connection issues
         }
       );
   
@@ -50,7 +49,6 @@ const CreateKYCForm = () => {
       setIsSubmitting(false);
     }
   };
-  
   
 
   const handleImageUpload = (e) => {
