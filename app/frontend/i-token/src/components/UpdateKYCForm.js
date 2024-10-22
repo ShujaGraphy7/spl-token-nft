@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const UpdateKYCForm = () => {
-  const [walletAddress, setWalletAddress] = useState('');
+  const [walletAddress, setWalletAddress] = useState("");
   const [metadata, setMetadata] = useState({});
-  const [newKey, setNewKey] = useState('');  // To store the key
-  const [newValue, setNewValue] = useState('');  // To store the value
+  const [newKey, setNewKey] = useState(""); // To store the key
+  const [newValue, setNewValue] = useState(""); // To store the value
   const [kycStatus, setKycStatus] = useState(false); // KYC Status field
-  const [error, setError] = useState(''); // Error message state
+  const [error, setError] = useState(""); // Error message state
   const [isKycVerified, setIsKycVerified] = useState(false); // State to check if KYC is verified
 
   // Function to fetch existing KYC data based on wallet address
@@ -15,7 +15,9 @@ const UpdateKYCForm = () => {
     if (!walletAddress) return; // Do nothing if wallet address is empty
 
     try {
-      const response = await axios.get(`http://localhost:4000/api/tokens/display?walletAddress=${walletAddress}`);
+      const response = await axios.get(
+        `https://spl-token-nft.vercel.app/api/tokens/display?walletAddress=${walletAddress}`
+      );
       const kycData = response.data;
 
       // Set the fetched KYC status and metadata
@@ -23,38 +25,48 @@ const UpdateKYCForm = () => {
       setMetadata(kycData.metadata);
       setIsKycVerified(kycData.kycStatus); // Check if KYC is verified
     } catch (error) {
-      console.error('Error fetching KYC data:', error);
-      setError(error.response?.data?.message || 'An unexpected error occurred.');
+      console.error("Error fetching KYC data:", error);
+      setError(
+        error.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   // Effect to fetch KYC data when wallet address changes
   useEffect(() => {
     fetchKycData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   // Function to update KYC data
   const updateKycData = async () => {
     try {
       // Clear any previous errors
-      setError('');
+      setError("");
 
-      const response = await axios.put('http://localhost:4000/api/tokens/update', {
-        walletAddress,
-        metadata: {
-          ...metadata,
-          walletAddress,  // Ensure walletAddress is included
-          kycStatus // Include KYC status in the metadata
+      const response = await axios.put(
+        "https://spl-token-nft.vercel.app/api/tokens/update",
+        {
+          walletAddress,
+          metadata: {
+            ...metadata,
+            walletAddress, // Ensure walletAddress is included
+            kycStatus, // Include KYC status in the metadata
+          },
+          Headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`, // Send the token in the Authorization header
+          },
         }
-      });
-      console.log('KYC Data updated:', response.data);
+      );
+      console.log("KYC Data updated:", response.data);
       // Optionally, you could display a success message or clear the form
-      alert('KYC entry updated successfully!');
+      alert("KYC entry updated successfully!");
     } catch (error) {
-      console.error('Error updating KYC data:', error);
+      console.error("Error updating KYC data:", error);
       // Set the error message from the response
-      setError(error.response?.data?.message || 'An unexpected error occurred.');
+      setError(
+        error.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
@@ -62,10 +74,10 @@ const UpdateKYCForm = () => {
   const addMetadataField = () => {
     if (newKey && newValue) {
       setMetadata({ ...metadata, [newKey]: newValue });
-      setNewKey('');  // Clear the key input
-      setNewValue('');  // Clear the value input
+      setNewKey(""); // Clear the key input
+      setNewValue(""); // Clear the value input
     } else {
-      setError('Please enter both key and value.'); // Set error message for empty fields
+      setError("Please enter both key and value."); // Set error message for empty fields
     }
   };
 
@@ -73,9 +85,7 @@ const UpdateKYCForm = () => {
     <div className="p-4 max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Update KYC Data</h2>
       {error && (
-        <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
-          {error}
-        </div>
+        <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>
       )}
       {/* Wallet Address Input */}
       <input
@@ -116,7 +126,11 @@ const UpdateKYCForm = () => {
           placeholder="Metadata Value (e.g., John Doe)"
           className="border p-2 w-full mb-2"
         />
-        <button type="button" onClick={addMetadataField} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button
+          type="button"
+          onClick={addMetadataField}
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
           Add Metadata Field
         </button>
       </div>
@@ -136,7 +150,10 @@ const UpdateKYCForm = () => {
       )}
 
       {/* Submit Button to Update KYC Data */}
-      <button onClick={updateKycData} className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+      <button
+        onClick={updateKycData}
+        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+      >
         Update KYC Data
       </button>
     </div>

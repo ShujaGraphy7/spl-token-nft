@@ -1,19 +1,24 @@
+// app.js
 const express = require("express");
 const cors = require("cors");
 const tokenRoutes = require("./routes/index.js");
-const connectDB = require("./connectDB"); // Import the connection function
+const connectDB = require("./connectDB");
+const authenticateJWT = require('./utils/authMiddleware'); // JWT middleware
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 // CORS configuration
 app.use(cors({ 
-  origin: 'http://localhost:3000', 
+  origin: 'https://spl-token-nft.vercel.app/', 
   credentials: true 
 }));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Apply JWT middleware globally (except /display route)
+app.use(authenticateJWT); 
 
 // Define API routes
 app.use("/api/tokens", tokenRoutes);

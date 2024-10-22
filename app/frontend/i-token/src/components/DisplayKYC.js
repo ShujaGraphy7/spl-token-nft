@@ -18,7 +18,7 @@ const DisplayKYC = () => {
       setIsLoading(true);
       setError(''); // Clear any previous errors
 
-      const response = await axios.get('http://localhost:4000/api/tokens/display', {
+      const response = await axios.get('https://spl-token-nft.vercel.app/api/tokens/display', {
         params: { walletAddress },
       });
 
