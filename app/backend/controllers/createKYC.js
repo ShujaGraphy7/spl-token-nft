@@ -25,7 +25,7 @@ exports.createKYC = async (req, res) => {
     // Create a new KYC entry with image data and placeholders for metadata and status
     const newKycEntry = new KYCModel({
       walletAddress,
-      status: 'pending', // Set initial status as pending
+      kycStatus: 'null', // Set initial status as pending
       metadata: {}, // Placeholder for metadata
       img: {
         data: image.buffer, // Store image binary data
@@ -34,13 +34,13 @@ exports.createKYC = async (req, res) => {
     });
 
     // Generate the URLs for image and metadata
-    const baseUrl = process.env.BASE_URL || "https://spl-token-nft.vercel.app/";
+    const baseUrl = process.env.BASE_URL || "http://localhost:4000";
     const imageUrl = `${baseUrl}/api/tokens/image/${newKycEntry._id}`;
     const metadataUrl = `${baseUrl}/api/tokens/metadata/${newKycEntry._id}`;
 
     // Create the metadata object
     const metadata = {
-      status: newKycEntry.status, // Include status in metadata
+      kycStatus: newKycEntry.kycStatus, // Include status in metadata
       metadataUrl,
       walletAddress,
       name,
@@ -58,14 +58,22 @@ exports.createKYC = async (req, res) => {
 
     // Call mintNFT to mint the NFT and pass the metadata
     console.log("Minting NFT with metadata:", metadata); // Log metadata for debugging
-    const nftdata = await mintNFT(newKycEntry._id, walletAddress, metadata); // Pass kycId to mintNFT
+    const nftData = await mintNFT(newKycEntry._id, walletAddress, metadata); // Pass kycId to mintNFT
 
+    // If the NFT was minted successfully, update the KYC entry with the referenceId (nftAddress)
+    if (nftData.success && nftData.nftAddress) {
+      newKycEntry.referenceId = nftData.nftAddress; // Set the NFT address as the reference number
+      await newKycEntry.save(); // Save the updated KYC entry with the NFT address
+    }
+
+    // Return the KYC entry and NFT minting information in the response
     return res.status(201).json({
       message: "KYC entry created successfully",
       walletAddress,
-      nftdata,       // NFT data from minting
-      metadataUrl,   // Return the metadata URL
-      imageUrl,      // Return the image URL
+      nftData,         // Include the NFT data (explorer link and nftAddress)
+      metadataUrl,
+      imageUrl,
+      referenceId: nftData.nftAddress || '', // Return the referenceId (NFT address) in the response
     });
   } catch (error) {
     console.error("Error creating KYC data:", error);

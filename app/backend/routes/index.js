@@ -6,7 +6,9 @@ const multer = require("multer");
 const { createKYC } = require("../controllers/createKYC");
 const { updateKYC } = require("../controllers/updateKYC");
 const { displayKYC } = require("../controllers/displayKYC");
+const { updateKYCStatus } = require("../controllers/updateKYCStatus");
 const KYCModel = require("../models/KYCModel");
+const { deleteKYCEntry } = require("../controllers/deleteKYC");
 
 // Set up Multer for image uploads
 const storage = multer.memoryStorage(); // Store the image in memory
@@ -15,7 +17,10 @@ const upload = multer({ storage: storage }); // Multer middleware for handling f
 // Define routes
 router.post("/create", upload.single('image'), createKYC); // Use multer for image upload
 router.put("/update", updateKYC);
+router.post("/updateKYC", updateKYCStatus);
 router.get("/display", displayKYC);
+router.delete('/deleteKYC/:walletAddress', deleteKYCEntry);
+
 
 router.get('/image/:id', async (req, res) => {
     try {

@@ -1,7 +1,7 @@
 const KYCModel = require("../models/KYCModel");
 
 exports.updateKYC = async (req, res) => {
-  const { walletAddress, metadata, status } = req.body;
+  const { walletAddress, metadata, kycStatus } = req.body;
 
   if (!walletAddress) {
     return res.status(400).json({ message: "Wallet address is required" });
@@ -16,9 +16,6 @@ exports.updateKYC = async (req, res) => {
       });
     }
 
-    // Check if the KYC is verified (previously verified as accepted)
-    const isVerified = kycEntry.status === 'accepted';
-
     // Update metadata if provided
     if (metadata) {
       for (let key in metadata) {
@@ -27,20 +24,13 @@ exports.updateKYC = async (req, res) => {
     }
 
     // If status is being updated
-    if (status !== undefined) {
-      if (isVerified && status !== 'accepted') {
-        // Prevent changing status from accepted to pending or rejected
-        return res.status(400).json({
-          message: "Cannot change KYC status from accepted to pending or rejected.",
-        });
-      }
-
-      // Update the main status field
-      kycEntry.status = status;
+    if (kycStatus !== undefined) {
+      
+      kycEntry.kycStatus = kycStatus;
     }
 
     // Ensure status exists in both metadata and the main field
-    kycEntry.metadata.set("status", kycEntry.status);
+    kycEntry.metadata.set("kycStatus", kycEntry.kycStatus);
 
     // Update walletAddress in metadata for consistency
     kycEntry.metadata.set("walletAddress", walletAddress);
@@ -50,7 +40,7 @@ exports.updateKYC = async (req, res) => {
     return res.status(200).json({
       message: "KYC data updated successfully",
       walletAddress,
-      status: kycEntry.status, // Return updated status
+      kycStatus: kycEntry.kycStatus, // Return updated status
       metadata: Object.fromEntries(kycEntry.metadata), // Convert Map to plain object
     });
   } catch (error) {

@@ -6,7 +6,7 @@ const validJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja
 // Middleware to authenticate JWT
 const authenticateJWT = (req, res, next) => {
     // Skip JWT verification for the /display route
-    if (req.path === '/api/tokens/display') {
+    if (req.path === '/api/tokens/display' || '/api/tokens/metadata' || '/api/tokens/image') {
         return next(); 
     }
 

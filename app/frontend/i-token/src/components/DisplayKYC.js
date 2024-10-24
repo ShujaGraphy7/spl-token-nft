@@ -22,6 +22,8 @@ const DisplayKYC = () => {
         params: { walletAddress },
       });
 
+      console.log(response)
+
       setKycData(response.data);
     } catch (error) {
       console.error('Error fetching KYC data:', error);

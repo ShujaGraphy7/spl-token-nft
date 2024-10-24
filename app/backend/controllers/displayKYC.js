@@ -15,13 +15,12 @@ exports.displayKYC = async (req, res) => {
       return res.status(404).json({ message: "KYC data not found" });
     }
 
-    const { metadata, walletAddress: addr } = kycData;
-    const kycStatus = metadata.get('kycStatus');  // Access kycStatus from metadata
+    const { metadata, walletAddress: addr, kycStatus, referenceId, explorerLink } = kycData;
 
     return res.json({
       walletAddress: addr,
-      kycStatus,   // Return kycStatus from metadata
-      metadata,    // Return metadata directly (including explorerLink if present)
+      referenceId,  // Return top-level referenceId (NFT address)
+      metadata      // Return metadata map
     });
   } catch (error) {
     console.error("Error fetching KYC data:", error);

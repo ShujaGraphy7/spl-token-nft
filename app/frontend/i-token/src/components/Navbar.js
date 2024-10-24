@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CreateKYCForm from './CreateKYCForm';
 import UpdateKYCForm from './UpdateKYCForm';
 import DisplayKYC from './DisplayKYC';
+import DeleteKYC from './DeleteKYC';
 
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState('kyc'); // Default to 'KYC'
@@ -21,12 +22,18 @@ const Navbar = () => {
            <UpdateKYCForm/>
           </div>
         );
-      case 'settings':
+      case 'getKyc':
         return (
           <div className="p-4 text-center">
             <DisplayKYC/>
           </div>
         );
+        case 'delete':
+          return (
+            <div className="p-4 text-center">
+              <DeleteKYC/>
+            </div>
+          );
       default:
         return <div className="p-4 text-center">Select a section from the menu.</div>;
     }
@@ -58,13 +65,23 @@ const Navbar = () => {
         </button>
         <button
           className={`py-2 px-4 rounded ${
-            activeSection === 'settings'
+            activeSection === 'getKyc'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 text-black hover:bg-blue-300'
           }`}
-          onClick={() => setActiveSection('settings')}
+          onClick={() => setActiveSection('getKyc')}
         >
           Display KYC
+        </button>
+        <button
+          className={`py-2 px-4 rounded ${
+            activeSection === 'delete'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-200 text-black hover:bg-blue-300'
+          }`}
+          onClick={() => setActiveSection('delete')}
+        >
+          Delete KYC
         </button>
       </div>
 

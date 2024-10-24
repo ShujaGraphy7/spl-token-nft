@@ -25,7 +25,7 @@ const KYCModel = require('../models/KYCModel'); // Import the KYC model
 
 require("dotenv").config();
 
-const mintNFT = async (kycId, recieverAddress, metadata) => {
+const mintNFT = async (kycId, receiverAddress, metadata) => {
   try {
     // Initialize Solana connection
     const SOLANA_CONNECTION = new Connection(clusterApiUrl("devnet"), "finalized");
@@ -73,11 +73,11 @@ const mintNFT = async (kycId, recieverAddress, metadata) => {
       }
     };
 
-    if (!isValidPublicKey(recieverAddress)) {
+    if (!isValidPublicKey(receiverAddress)) {
       throw new Error("Invalid receiver public key.");
     }
 
-    const DESTINATION_WALLET = recieverAddress;
+    const DESTINATION_WALLET = receiverAddress;
     const MINT_ADDRESS = collectionMint.publicKey.toString(); // Ensure this is a string
 
     const TRANSFER_AMOUNT = 1;
@@ -137,7 +137,13 @@ const mintNFT = async (kycId, recieverAddress, metadata) => {
 
     console.log(`KYC metadata updated with explorerLink: ${explorerLink}`);
 
-    return { success: true, explorerLink };
+    
+    // Return both the explorer link and the NFT address
+    return { 
+      success: true, 
+      explorerLink, 
+      nftAddress: MINT_ADDRESS  // Return the NFT address here
+    };
   } catch (error) {
     console.error("Error minting NFT:", error);
     return { success: false, error: error.message };

@@ -6,7 +6,7 @@ const UpdateKYCForm = () => {
   const [metadata, setMetadata] = useState({});
   const [newKey, setNewKey] = useState('');  // To store the key
   const [newValue, setNewValue] = useState('');  // To store the value
-  const [status, setStatus] = useState('pending'); // Status field (pending, accepted, rejected)
+  const [kycStatus, setKycStatus] = useState('pending'); // KYC Status field (pending, accepted, rejected)
   const [error, setError] = useState(''); // Error message state
   const [isKycVerified, setIsKycVerified] = useState(false); // State to check if KYC is verified
 
@@ -21,9 +21,9 @@ const UpdateKYCForm = () => {
       const kycData = response.data;
 
       // Set the fetched KYC status and metadata
-      setStatus(kycData.status);
+      setKycStatus(kycData?.kycStatus?.toString()); // Ensure kycStatus is always a string
       setMetadata(kycData.metadata);
-      setIsKycVerified(kycData.status === 'accepted'); // Check if KYC is verified (accepted)
+      setIsKycVerified(kycData.kycStatus === 'accepted'); // Check if KYC is verified (accepted)
     } catch (error) {
       console.error('Error fetching KYC data:', error);
       setError(error.response?.data?.message || 'An unexpected error occurred.');
@@ -41,42 +41,31 @@ const UpdateKYCForm = () => {
     try {
       // Clear any previous errors
       setError('');
-
-      const response = await axios.put(
-        "http://localhost:4000/api/tokens/update",
+  
+      // Ensure kycStatus is always a string
+      const statusToUpdate = kycStatus ? kycStatus.toString() : 'pending'; // Fallback to 'pending' if undefined
+  
+      const response = await axios.post(
+        "http://localhost:4000/api/tokens/updateKYC",  // Updated endpoint
         {
           walletAddress,
-          metadata: {
-            ...metadata,
-            walletAddress, // Ensure walletAddress is included
-          },
-          status, // Include the KYC status field (pending, accepted, or rejected)
+          kycStatus: statusToUpdate, // Ensure kycStatus is always a string when sent
         },
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`, // Send the token in the Authorization header
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlIjoibXktYmFja2VuZC1zZXJ2aWNlIiwiaWF0IjoxNzI5NTk0ODA4LCJleHAiOjIwNDUxNzA4MDh9.66XRHLU4jLcdQSJLdFTONDSYdZ4wynMXWIw5iORQhIo`,
           },
         }
       );
       console.log('KYC Data updated:', response.data);
-      alert('KYC entry updated successfully!');
+      alert('KYC status updated successfully!');
     } catch (error) {
-      console.error('Error updating KYC data:', error);
+      console.error('Error updating KYC status:', error);
       // Set the error message from the response
       setError(error.response?.data?.message || 'An unexpected error occurred.');
     }
   };
-
-  // Function to add new key-value pair to metadata
-  const addMetadataField = () => {
-    if (newKey && newValue) {
-      setMetadata({ ...metadata, [newKey]: newValue });
-      setNewKey('');  // Clear the key input
-      setNewValue('');  // Clear the value input
-    } else {
-      setError('Please enter both key and value.'); // Set error message for empty fields
-    }
-  };
+  
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -100,8 +89,8 @@ const UpdateKYCForm = () => {
       <div className="mb-4">
         <label className="block font-semibold mb-2">KYC Status</label>
         <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          value={kycStatus}
+          onChange={(e) => setKycStatus(e.target.value)}
           disabled={isKycVerified} // Disable if KYC is verified
           className="border p-2 w-full"
         >
@@ -109,30 +98,6 @@ const UpdateKYCForm = () => {
           <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
         </select>
-      </div>
-
-
-
-      <div className="mb-4">
-      <label className="block font-semibold mb-2">Add new Metadata Field</label>
-
-        <input
-          type="text"
-          value={newKey}
-          onChange={(e) => setNewKey(e.target.value)}
-          placeholder="Metadata Key (e.g., name)"
-          className="border p-2 w-full mb-2"
-        />
-        <input
-          type="text"
-          value={newValue}
-          onChange={(e) => setNewValue(e.target.value)}
-          placeholder="Metadata Value (e.g., John Doe)"
-          className="border p-2 w-full mb-2"
-        />
-        <button type="button" onClick={addMetadataField} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-          Add Metadata Field
-        </button>
       </div>
 
       {/* Display the current metadata */}

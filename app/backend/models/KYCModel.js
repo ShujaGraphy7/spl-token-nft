@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
 const KYCModel = new mongoose.Schema({
-    walletAddress: { type: String, required: true },
+    walletAddress: { type: String, required: true, index: true }, // Adding index for faster lookup
+    referenceId: { type: String, default: '' }, // Store the NFT address here
+    explorerLink: { type: String, default: '' }, // Store the explorer link here
     metadata: {
-        type: Map,  // Using a Map to store dynamic key-value pairs
-        of: mongoose.Schema.Types.Mixed,  // Flexible schema to store any type of data
-        default: { explorerLink: '' },  // Removed kycStatus from metadata
+        type: Map,
+        of: mongoose.Schema.Types.Mixed,
+        default: {},
     },
-    status: { type: String, enum: ['pending', 'rejected', 'accepted'], default: 'pending' },  // New status field
+    kycStatus: { type: String, default: 'null' },
     img: {
         data: Buffer,
         contentType: String
