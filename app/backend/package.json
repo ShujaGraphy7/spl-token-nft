@@ -13,6 +13,8 @@
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@metaplex-foundation/umi": "^0.9.2",
+    "@metaplex-foundation/umi-bundle-defaults": "^0.9.2",
+    "@solana-developers/helpers": "^2.5.6",
     "@solana/web3.js": "^1.95.3",
     "axios": "^1.7.7",
     "body-parser": "^1.20.3",
@@ -22,7 +24,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
     "multer": "^1.4.5-lts.1",
-    "multer-gridfs-storage": "^5.0.2",
     "nodemon": "^3.1.7"
   }
 }

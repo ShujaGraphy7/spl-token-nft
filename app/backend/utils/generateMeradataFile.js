@@ -19,7 +19,7 @@ const generateMetadataFile = async (metadata, walletAddress) => {
   
       // Return the URL to the generated metadata file
       return `${
-        process.env.BASE_URL || "http://localhost:4000"
+      process.env.BASE_URL || "http://13.60.244.135"
       }/metadata/${filename}`;
     } catch (error) {
       console.error("Error generating metadata file:", error);

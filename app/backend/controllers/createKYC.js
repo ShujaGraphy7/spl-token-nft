@@ -2,6 +2,8 @@ const KYCModel = require("../models/KYCModel");
 const multer = require("multer");
 const mintNFT = require("../utils/mintNFT");
 
+require("dotenv").config();
+
 // Set up Multer for image uploads
 const storage = multer.memoryStorage(); // Store the image in memory
 const upload = multer({ storage: storage });
@@ -34,9 +36,9 @@ exports.createKYC = async (req, res) => {
     });
 
     // Generate the URLs for image and metadata
-    const baseUrl = process.env.BASE_URL || "http://localhost:4000";
-    const imageUrl = `${baseUrl}/api/tokens/image/${newKycEntry._id}`;
-    const metadataUrl = `${baseUrl}/api/tokens/metadata/${newKycEntry._id}`;
+    const baseUrl = process.env.BASE_URL;
+    const imageUrl = `${baseUrl}/tokens/image/${newKycEntry._id}`;
+    const metadataUrl = `${baseUrl}/tokens/metadata/${newKycEntry._id}`;
 
     // Create the metadata object
     const metadata = {

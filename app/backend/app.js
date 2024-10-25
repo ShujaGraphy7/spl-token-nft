@@ -9,27 +9,29 @@ const port = process.env.PORT || 4000;
 
 // CORS configuration
 app.use(cors({ 
-  origin: 'http://localhost:3000', 
+  origin: 'https://identitytoken.netlify.app/', 
   credentials: true 
 }));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// Set server timeout (in milliseconds)
+const server = app.listen(port, async () => {
+  await connectDB();
+  console.log(`Backend server running on port ${port}`);
+});
+
+server.setTimeout(120000); 
+
 // Apply JWT middleware globally (except /display route)
 app.use(authenticateJWT); 
 
 // Define API routes
-app.use("/api/tokens", tokenRoutes);
+app.use("/tokens", tokenRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error("Server error:", err);
-  res.status(500).json({ message: "Internal Server Error" });
-});
-
-// Start the server only after connecting to the database
-app.listen(port, async () => {
-  await connectDB();
-  console.log(`Backend server running on port ${port}`);
+  res.status(err.status || 500).json({ message: err.message || "Internal Server Error" });
 });

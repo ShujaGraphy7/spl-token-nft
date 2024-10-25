@@ -38,20 +38,23 @@ router.get('/image/:id', async (req, res) => {
     }
   });
 
-  // Route to serve metadata based on the KYC entry ID
+// Route to serve metadata based on the KYC entry ID
 router.get('/metadata/:id', async (req, res) => {
-    try {
-      const kycEntry = await KYCModel.findById(req.params.id);
-  
-      if (!kycEntry) {
-        return res.status(404).json({ message: 'Metadata not found' });
-      }
-  
-      res.json(kycEntry.metadata); // Serve the metadata as JSON
-    } catch (error) {
-      console.error("Error fetching metadata:", error);
-      res.status(500).json({ message: 'Server error' });
+  try {
+    // Fetch the KYC entry from the database using the provided ID
+    const kycEntry = await KYCModel.findById(req.params.id);
+
+    // If no entry is found, return a 404 error
+    if (!kycEntry) {
+      return res.status(404).json({ message: 'Metadata not found' });
     }
-  });
+
+    // Return the metadata as a JSON response
+    return res.json(kycEntry.metadata); // Serve the actual metadata
+  } catch (error) {
+    console.error("Error fetching metadata:", error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
   
   module.exports = router;
