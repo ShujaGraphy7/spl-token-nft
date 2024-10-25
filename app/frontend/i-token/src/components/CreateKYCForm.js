@@ -25,7 +25,7 @@ const CreateKYCForm = () => {
       formData.append("image", image);
   
       const response = await axios.post(
-        "http://localhost:4000/api/tokens/create",
+       `${process.env.REACT_APP_BACKEND_URL}/api/tokens/create`,
         formData,
         {
           headers: {

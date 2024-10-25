@@ -16,7 +16,7 @@ const UpdateKYCForm = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/tokens/display?walletAddress=${walletAddress}`
+        `${process.env.REACT_APP_BACKEND_URL}/api/tokens/display?walletAddress=${walletAddress}`
       );
       const kycData = response.data;
 

@@ -41,7 +41,7 @@ const DisplayKYC = () => {
       setError(""); // Clear any previous errors
 
       const response = await axios.get(
-        "http://localhost:4000/api/tokens/display",
+        `${process.env.REACT_APP_BACKEND_URL}/api/tokens/display`,
         {
           params: { walletAddress: address },
         }
@@ -131,7 +131,7 @@ const DisplayKYC = () => {
       // Step 7 - Call backend to delete KYC entry
       console.log("Step 7 - Deleting KYC entry from backend");
       await axios.delete(
-        `http://localhost:4000/api/tokens/deleteKYC/${walletAddress}`
+        `${process.env.REACT_APP_BACKEND_URL}/api/tokens/deleteKYC/${walletAddress}`
       );
       alert("KYC entry deleted successfully from backend");
     } catch (error) {

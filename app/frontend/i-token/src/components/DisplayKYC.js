@@ -34,7 +34,7 @@ const DisplayKYC = () => {
       setIsLoading(true);
       setError(''); // Clear any previous errors
 
-      const response = await axios.get('http://localhost:4000/api/tokens/display', {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/tokens/display`, {
         params: { walletAddress: address },
       });
 
